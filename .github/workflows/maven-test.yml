@@ -7,9 +7,18 @@ on:
   pull_request:
     branches:
       - main
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      
+    permissions:
+        contents: write
+
     steps:
       - name: checkout of the repo
         uses: actions/checkout@v3
@@ -33,8 +42,15 @@ jobs:
           chmod a+x wait_for_exit.sh 
           ./wait_for_exit.sh app_test
         shell: bash
-        
+
       - name: Stop the grid setup
         if: always()
         run: |
           docker-compose -f "docker-compose.yml" down    
+
+      - name: Deploy the html result
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output/reports
