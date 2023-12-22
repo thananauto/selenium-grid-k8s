@@ -6,7 +6,7 @@ services:
       - ./output:/app/target
     networks:
       - grid
-    command: "mvn test"
+    command: "test"
     links:
       - "selenium-hub:selenium-hub"
     depends_on:
