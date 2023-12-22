@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+    
 permissions:
   id-token: write
   pages: write
@@ -39,34 +40,16 @@ jobs:
             ./wait_for_exit.sh app_test
         shell: bash
 
-      #- name: Deploy the test output
-      #    uses: peaceiris/actions-gh-pages@v3
-      #    if: github.ref == 'refs/heads/main'
-      #    with:
-       #     github_token: ${{ secrets.GITHUB_TOKEN }}
-       #     publish_dir: ./output/reports
+      - name: Deploy the test output
+          uses: peaceiris/actions-gh-pages@v3
+          if: github.ref == 'refs/heads/main'
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./output/reports
 
       - name: Stop the grid setup
         if: always()
         run: |
           docker-compose -f "docker-compose.yml" down  
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          # Upload entire repository
-          path: './output/reports '
-  deploy:
-    needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v3
+   
