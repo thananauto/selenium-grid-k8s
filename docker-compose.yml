@@ -1,15 +1,19 @@
-
 services:
   app:
     build: .
     container_name: app_test
     volumes:
-      - `pwd`/output:/app/target
+      - ./output:/app/target
     networks:
       - grid
-    command:
-      - clean test
-    
+    command: "mvn test"
+    links:
+      - "selenium-hub:selenium-hub"
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+      
+
   chrome:
     image: selenium/node-chrome:4.9.0-20230421
     container_name: node-chrome
@@ -21,6 +25,8 @@ services:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_INSTANCES=2
+      - SE_NODE_MAX_SESSIONS=2
     networks:
       - grid
 
@@ -35,6 +41,8 @@ services:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_INSTANCES=2
+      - SE_NODE_MAX_SESSIONS=2
     networks:
       - grid
 
@@ -50,6 +58,8 @@ services:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_INSTANCES=2
+      - SE_NODE_MAX_SESSIONS=2
     networks:
       - grid
 
@@ -67,9 +77,7 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
-    depends_on:
-      app:
-        condition: service_completed_successfully
+
 
 networks:
   grid:
