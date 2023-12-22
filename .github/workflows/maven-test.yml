@@ -1,42 +1,40 @@
+---
 name: UI Test
-
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
-
+    branches:
+      - main
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - name: checkout of the repo
-      uses: actions/checkout@v3
+      - name: checkout of the repo
+        uses: actions/checkout@v3
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: temurin
+          cache: maven
 
-    - name: Docker cache
-      uses: satackey/action-docker-layer-caching@v0.0.11
-      continue-on-error: true
+      - name: Docker cache
+        uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
 
-    - name: setup Hub and nodes and execute the script
-      run: docker-compose -f "docker-compose.yml" up -d --build
+      - name: setup Hub and nodes and execute the script
+        run: docker-compose -f "docker-compose.yml" up -d --build
 
-    - name wait for the test containers to exit
+      - name: wait for the test containers to exit
         run: |
-            chmod a+x wait_for_exit.sh 
-            ./wait_for_exit.sh app_test
+          chmod a+x wait_for_exit.sh 
+          ./wait_for_exit.sh app_test
         shell: bash
         
-    - name: Stop the grid setup
-      if: always()
-      run: |
-        docker-compose -f "docker-compose.yml" down    
-   
+      - name: Stop the grid setup
+        if: always()
+        run: |
+          docker-compose -f "docker-compose.yml" down    
