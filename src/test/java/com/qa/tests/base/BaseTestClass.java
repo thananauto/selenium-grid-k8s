@@ -45,6 +45,7 @@ public class BaseTestClass implements BeforeAllCallback, BeforeTestExecutionCall
     public void afterTestExecution(ExtensionContext context) throws Exception {
         OnTestRun(context);
         teardown();
+        ExtentTestManager.removeTest();
     }
 
     @Override
@@ -80,11 +81,12 @@ public class BaseTestClass implements BeforeAllCallback, BeforeTestExecutionCall
     @SneakyThrows
     public void OnTestRun(ExtensionContext context){
         ExtentTest extentTest = ExtentTestManager.getTest();
-        String exceptionName = context.getExecutionException().get().getClass().getSimpleName();
-        extentTest.assignCategory(exceptionName);
+
         String tagName = context.getTestMethod().get().getAnnotation(Tag.class).value();
         extentTest.assignCategory(tagName);
         if(context.getExecutionException().isPresent()){
+            String exceptionName = context.getExecutionException().get().getClass().getSimpleName();
+            extentTest.assignCategory(exceptionName);
             extentTest.log(Status.FAIL, context.getTestMethod().get().getName());
             for(int i=0;i<context.getTestMethod().get().getParameters().length;i++){
                 extentTest.log(Status.FAIL,context.getTestMethod().get().getParameters()[i].toString());
@@ -99,6 +101,8 @@ public class BaseTestClass implements BeforeAllCallback, BeforeTestExecutionCall
             extentTest.log(Status.PASS, context.getDisplayName());
             //extentTest.log(Status.PASS,"TestClass:"+result.getClass().getName()+" : "+result.getMethod().getDescription());
         }
+
+
 
     }
 
