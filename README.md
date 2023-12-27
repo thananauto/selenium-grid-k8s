@@ -1,4 +1,4 @@
-# selenium-grid on Container
+# selenium-grid on Container [![pages-build-deployment](https://github.com/thananauto/selenium-grid-k8s/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/thananauto/selenium-grid-k8s/actions/workflows/pages/pages-build-deployment)
 This is the sample UI selenium scripts to do the execution on grid premises, the grid could be setup either in Docker or Kubernetes
 
 ## Tools and Libraries
