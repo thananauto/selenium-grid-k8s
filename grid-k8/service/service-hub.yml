@@ -19,6 +19,13 @@ spec:
       nodePort: 31001
       name: port0
 
+    - port: 4443
+      targetPort: 4443
+      name: port1
+
+    - port: 4442
+      targetPort: 4442
+      name: port2
 
 
   sessionAffinity: None
