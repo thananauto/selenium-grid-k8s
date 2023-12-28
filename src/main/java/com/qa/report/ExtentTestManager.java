@@ -39,5 +39,10 @@ public class ExtentTestManager {
     public static synchronized void flush(){
         extent.flush();
 
+
+    }
+
+    public static void removeTest() {
+        extentTestMap.remove((int) Thread.currentThread().getId());
     }
 }
