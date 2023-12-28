@@ -29,10 +29,9 @@ docker build -t your-image-name .
 ```
 2. Run Docker Container
 ```bash
-docker run -it your-image-name
+docker run -it -rm -v `pwd`/output:/app/target  your-image-name
 ```
-By default, the container is configured to run the Maven test goal when started. Customize the CMD instruction in the Dockerfile to change the default behavior.
-Feel free to customize the Dockerfile as needed. You can modify the base image, install additional dependencies, or adjust the entry point and default command
+By default, the container is configured to run the Maven test goal when started. Feel free to customize the Dockerfile as needed. You can modify the base image, install additional dependencies, or adjust the entry point and default command
 
 ## Selenium Grid Docker Compose Configuration
 
@@ -96,9 +95,12 @@ cd selenium-grid-k8s
 Deploy Selenium Grid using kubectl:
 
 ```bash
-kubectl create -f deployment/
-kubectl create -f services/
+kubectl create namespace -n keda # separate namespace keda is needed if we going to use Grid autoscaling functionality
+kubectl create -f grid-k8/deployment/
+kubectl create -f grid-k8/services/
 ```
+For **KEDA** installation in controlplane refer [here](https://keda.sh/docs/1.5/deploy/#yaml)
+
 3. Monitor the deployment using kubectl:
 ```bash
 kubectl get all
@@ -107,7 +109,7 @@ Ensure that all `deployments`, `services` and `pods` are up and running.
 
 4. Accessing Selenium Grid, Once the deployment is successful, you can access the Selenium Grid console through the exposed service. By default, the service is set to `NodePort`. Retrieve the NodePort assigned to the service using:
 ```bash
-kubectl get service selenium-grid
+kubectl get service selenium-hub
 ```
 Access the Selenium Grid console by navigating to `http://<Node-IP>:<NodePort>` in your web browser.
 
@@ -116,12 +118,15 @@ You can scale the Selenium Grid nodes by updating the deployment replicas on the
 ```bash
 kubectl edit pods <pod-name> --replicas <desired-replica-count>
 ```
-6. Customization
+6. Execute UI test job
+```bash
+kubectl create -f grid-k8/jobs
+```
+7. Customization
 Feel free to customize the Kubernetes resources to suit your specific requirements. For example, you can modify resource requests, limits, or use custom Docker images for the Selenium nodes.
 
-7. Cleanup
+8. Cleanup
 When you're done testing or using Selenium Grid, you can delete the deployment using kubectl:
-
 ```bash
 Copy code
 kubectl delete <service-name> or <deployment-name>

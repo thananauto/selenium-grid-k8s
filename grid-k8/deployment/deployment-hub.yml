@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hub-deployment
+  namespace: keda
+  labels:
+    name: hub-deploy
+    app: grid
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: hub-pod
+      app: grid
+  template:
+    metadata:
+      name: hub-pod
+      labels:
+        name: hub-pod
+        app: grid
+
+    spec:
+      containers:
+        - name: selenium-hub
+          image: selenium/hub:4.9.0-20230421
+          ports:
+            - containerPort: 4444
+            - containerPort: 4442
+            - containerPort: 4443
+

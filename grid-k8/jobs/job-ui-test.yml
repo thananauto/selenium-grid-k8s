@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: keda
+  name: ui-test-job
+  labels:
+    app: grid
+    name: ui-jobs
+spec:
+  ttlSecondsAfterFinished: 100
+  # set backofflimit as 0, otherwise this job will keep on execute till the status as completed
+  backoffLimit: 0
+  template:
+    metadata:
+      name: ui-test-job
+    spec:
+      containers:
+        - name: sample-ui-test
+          image: thanandock/sample-ui-test:latest
+
+          volumeMounts:
+          - name: storage
+            mountPath: /app/target
+      volumes:
+        - name: storage
+          hostPath:
+            path: ./output
+            type: DirectoryOrCreate
+      restartPolicy: Never

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chrome-deployment
+  namespace: keda
+  labels:
+    name: chrome-deploy
+    app: grid
+spec:
+  template:
+    metadata:
+      name: chrome-pod
+      labels:
+        name: chrome-pod
+        app: grid
+
+    spec:
+      containers:
+        - name: node-chrome-pod
+          image: selenium/node-chrome:4.9.0-20230421
+
+          env:
+            - name: SE_EVENT_BUS_HOST
+              value: selenium-hub
+            - name: SE_EVENT_BUS_PUBLISH_PORT
+              value: "4442"
+            - name: SE_EVENT_BUS_SUBSCRIBE_PORT
+              value: "4443"
+            - name: SE_NODE_MAX_INSTANCES
+              value: "2"
+            - name: SE_NODE_MAX_SESSIONS
+              value: "2"
+
+  selector:
+    matchLabels:
+      name: chrome-pod
+      app: grid
+  replicas: 2

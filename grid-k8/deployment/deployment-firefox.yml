@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firefox-deployment
+  namespace: keda
+  labels:
+    name: firefox-deploy
+    app: grid
+spec:
+  template:
+    metadata:
+      name: firefox-pod
+      labels:
+        name: firefox-pod
+        app: grid
+
+    spec:
+      containers:
+        - name: node-firefox-pod
+          image: selenium/node-firefox:4.9.0-20230421
+
+          env:
+            - name: SE_EVENT_BUS_HOST
+              value: selenium-hub
+            - name: SE_EVENT_BUS_PUBLISH_PORT
+              value: "4442"
+            - name: SE_EVENT_BUS_SUBSCRIBE_PORT
+              value: "4443"
+            - name: SE_NODE_MAX_INSTANCES
+              value: "2"
+            - name: SE_NODE_MAX_SESSIONS
+              value: "2"
+  selector:
+    matchLabels:
+      name: firefox-pod
+      app: grid
+  replicas: 2
