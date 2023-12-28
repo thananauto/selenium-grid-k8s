@@ -133,6 +133,12 @@ kubectl delete <service-name> or <deployment-name>
 ```
 This will remove all resources created by the Selenium Grid deployment.
 
+**Note:** Currently we set the replica as 1 across all browser deployment yaml files, but in real time this could be increase based on the request load to `selenium-hub`, this could be addressed by Auto-scaling feature of kubernetes after setup default resources
+```bash
+kubectl create -f grid-k8s/scale
+```
+for more information refer [here](https://www.selenium.dev/blog/2022/scaling-grid-with-keda/)
+
 ### Troubleshooting
 If you encounter any issues during deployment, refer to the troubleshooting section in the documentation or inspect the pod logs for more details.
 
