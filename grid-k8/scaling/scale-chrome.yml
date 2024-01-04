@@ -1,17 +1,17 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  namespace: test-grid
+  namespace: ui-test-job
   name: chrome-scale-deployment
   labels:
     deploymentName: chrome-deployment
 spec:
-  minReplicaCount: 2
+  minReplicaCount: 1
   maxReplicaCount: 8
   scaleTargetRef:
     name: chrome-deployment
   triggers:
     - type: selenium-grid
       metadata:
-        url: 'https://selenium-hub:4444/graphql'
+        url: 'http://selenium-hub.ui-test-job:4444/graphql'
         browserName: 'chrome'
