@@ -8,6 +8,7 @@ then
   echo "$0: Pass only a single container name: $@"
   exit 1  
 else
+#many ways to find the docker container status
 	until [ "`docker inspect -f {{.State.Running}} $1`" == "false" ]; do
 		 echo "The container $1 is in UP status "
    		 sleep 3s;
