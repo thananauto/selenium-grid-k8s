@@ -2,7 +2,7 @@
 This is the sample UI selenium scripts to do the execution on grid premises, the grid could be setup either in Docker or Kubernetes
 
 ## Tools and Libraries
-- Selenoid
+- Selenide
 - Junit5
 - Gitworkflow
 - Docker
