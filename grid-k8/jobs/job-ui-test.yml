@@ -1,8 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  namespace: keda
-  name: ui-test-job
+  namespace: ui-test-job
+  name: ui-test
   labels:
     app: grid
     name: ui-jobs
